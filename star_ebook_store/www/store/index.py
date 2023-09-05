@@ -1,4 +1,6 @@
 import frappe
+#Combine different tables
+from frappe.query_builder.functions import Count
 
 def get_context(context):
     context.ebooks = frappe.get_all(
@@ -17,30 +19,30 @@ def get_context(context):
     )
 
 
-'''#Combine different tables
-from frappe.query_builder.functions import Count
-
 #The 3 Doctype To Join
-EBook = frappe.get_doc("eBook")
-Author = frappe.db.Doctype("Author")
-EBokOrder=frappe.qb.Doctype("eBook Order")
+EBook = frappe.qb.DocType("eBook")
+Author = frappe.qb.DocType("Author")
+EBookOrder=frappe.qb.DocType("eBook Orders")
 
 querry = (
-    frappe.db.from_(EBook)
+    frappe.qb.from_(EBook)
     .left_join(Author)
     .on(Author.name==EBook.author)
-    .left_join(EBokOrder)
-    .on((EBokOrder.ebook == EBook.name) & (EBokOrder.statu=="Paid"))
-    .where(EBokOrder.is_published == True)
+
+    .left_join(EBookOrder)
+    .on((EBookOrder.ebook == EBook.name) & (EBookOrder.status=="Paid"))
+    .where(EBook.is_published == True)
     .groupby(EBook.name)
     .select(
         EBook.route, EBook.cover_image,EBook.name,
         Author.full_name.as_("author_name"),
-        Count(EBokOrder.name).as_("sales_count"),
+        Count(EBookOrder.name).as_("sales_count"),
     )
     .orderby(EBook.creation) #Newest book
 
-
 )
 ebooks = querry.run(as_dict=True)
-'''
+
+#orders = frappe.qb.from_('eBook Orders').select('*').run(as_dict=True)
+
+

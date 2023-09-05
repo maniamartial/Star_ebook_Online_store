@@ -7,8 +7,9 @@ from frappe.website.utils import cleanup_page_name
 class eBook(WebsiteGenerator):
     def get_context(self, context):
         context.author = frappe.db.get_value(
-            "Author", self.author, ["full_name as name"], as_dict=True
+            "Author", self.author, ["full_name as name", "bio"], as_dict=True
 		)
+        context.csrf_token = frappe.sessions.get_csrf_token()
         
     def validate(self):
             if not self.route:

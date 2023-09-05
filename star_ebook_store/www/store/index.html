@@ -27,8 +27,11 @@
                 <p class="subtitle is-6">by {{ ebook.author_name }}</p>
               </div>
             </div>
-
-            <div class="content">445 downloads</div>
+            {%if ebook.sales%}
+            <div class="content">{{ebook.sales_count }}</div>
+            {% else %}
+            <div class="content">0 Sales</div>
+            {% endif %}
           </div>
         </div>
       </a>

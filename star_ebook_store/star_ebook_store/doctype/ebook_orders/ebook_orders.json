@@ -38,7 +38,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Complete\nIncomplete\nDelivered\nRejected"
+   "options": "Paid\nIncomplete\nDelivered\nRejected"
   },
   {
    "fieldname": "section_break_sjzj5",
@@ -71,7 +71,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-04 16:39:09.027326",
+ "modified": "2023-09-05 08:59:18.945488",
  "modified_by": "Administrator",
  "module": "star-ebook_store",
  "name": "eBook Orders",

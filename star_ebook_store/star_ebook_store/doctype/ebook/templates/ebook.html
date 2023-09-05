@@ -1,4 +1,5 @@
 {% extends "templates/store/base.html" %} {% block body %}
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <main class="container mb-6">
   <nav class="breadcrumb mt-4" aria-label="breadcrumbs">
@@ -29,36 +30,103 @@
       </div>
 
       <div>
-        <a
+        <button
+          id="buy-button"
+          data-ebook-name="{{ doc.name }}"
           class="button is-medium is-outlined is-link mt-5"
-          href="{{ doc.asset_file }}"
-          >Download</a
         >
+          Buy
+        </button>
       </div>
     </div>
   </div>
 </main>
 
-<section class="container">
+<section class="container" x-data="{activeTab: 'description'}">
   <div class="tabs">
     <ul>
-      <li class="is-active"><a>Description</a></li>
-      <li><a>TOC</a></li>
-      <li><a>About the author</a></li>
+      <li
+        :class="activeTab == 'description' ? 'is-active': ''"
+        @click="activeTab = 'description'"
+      >
+        <a>Description</a>
+      </li>
+
+      <li
+        :class="activeTab == 'toc' ? 'is-active': ''"
+        @click="activeTab = 'toc'"
+      >
+        <a>TOC</a>
+      </li>
+
+      <li
+        :class="activeTab == 'bio' ? 'is-active': ''"
+        @click="activeTab = 'bio'"
+      >
+        <a>About the author</a>
+      </li>
     </ul>
   </div>
 
-  <div>
+  <div x-show="activeTab == 'description'">
     <p>{{ frappe.utils.md_to_html(doc.description) }}</p>
   </div>
 
-  <div>
+  <div x-show="activeTab == 'toc'">
     <p>{{ frappe.utils.md_to_html(doc.toc) }}</p>
   </div>
 
-  <div>
+  <div x-show="activeTab == 'bio'">
     <p>{{ frappe.utils.md_to_html(author.bio) }}</p>
   </div>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get a reference to the Buy button
+    var buyButton = document.getElementById("buy-button");
+
+    // Attach a click event listener
+    buyButton.addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the default link behavior
+
+      // Retrieve the ebook_name from the data attribute
+      var ebookName = buyButton.getAttribute("data-ebook-name");
+
+      // Make an AJAX request to the API endpoint
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Frappe-CSRF-Token": "{{ csrf_token }}",
+        Expect: "",
+      };
+
+      fetch("/api/method/star_ebook_store.www.api.create_ebook_order", {
+        method: "POST",
+        body: JSON.stringify({
+          ebook_name: ebookName, // Use the retrieved value
+        }),
+        headers: headers,
+      })
+        .then(function (response) {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw Error("Something went wrong");
+          }
+        })
+
+        .then(function (orderData) {
+          // Handle the response here if needed
+          alert("Order created successfully. Order ID: ");
+        })
+
+        .catch(function (error) {
+          // Handle errors here
+          alert(error.message);
+        });
+    });
+  });
+</script>
 
 {% endblock %}
