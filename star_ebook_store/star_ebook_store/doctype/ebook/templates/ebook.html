@@ -38,6 +38,14 @@
           Buy
         </button>
       </div>
+      <div>
+        <button
+          id="pay-button"
+          class="button is-medium is-outlined is-link mt-5 btn-primary"
+        >
+          Mpesa Pay
+        </button>
+      </div>
     </div>
   </div>
 </main>
@@ -124,6 +132,59 @@
         .catch(function (error) {
           // Handle errors here
           alert(error.message);
+        });
+    });
+  });
+</script>
+
+<!--pay button mpesa-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get a reference to the "Mpesa Pay" button
+    var payButton = document.getElementById("pay-button");
+
+    // Attach a click event listener
+    payButton.addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the default button behavior
+
+      // Make an AJAX request to the API endpoint for Mpesa payment
+      access_token = "KVsZ0izc6IFUmnUPgNwICyuIFEm4";
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+        "X-Frappe-CSRF-Token": "{{ csrf_token }}",
+        Authorization: "Bearer " + access_token,
+        Expect: "",
+      };
+
+      fetch("/api/method/star_ebook_store.www.api.push_mpesa_stk", {
+        // Replace with the actual API endpoint
+        method: "POST",
+        body: JSON.stringify({
+          // Include any necessary data for Mpesa payment
+        }),
+        headers: headers,
+      })
+        .then(function (response) {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw Error("Something went wrong");
+          }
+        })
+
+        .then(function (paymentData) {
+          // Handle the response here if needed
+          // For example, you can redirect to the Mpesa payment page or display a message
+          alert(
+            "Initiating Mpesa payment. Payment ID: " + paymentData.payment_id
+          );
+        })
+
+        .catch(function (error) {
+          // Handle errors here
+          alert(error.message);
+          console.log(error.message);
         });
     });
   });

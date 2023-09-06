@@ -2,6 +2,7 @@ import requests
 import json
 from requests.auth import HTTPBasicAuth
 from datetime import datetime
+import frappe
 
 import base64
 
@@ -50,11 +51,10 @@ def getAccessToken():
         return token
     
 
-def payment_select(request):
+def push_mpesa_stk(request):
     # Format the phone number and amount
     number = '254740743521'
     amount = 800
-    print(number)
     # Get the Mpesa access token
     #access_token = 'KVsZ0izc6IFUmnUPgNwICyuIFEm4'
     access_token = getAccessToken()
@@ -86,10 +86,7 @@ def payment_select(request):
         print("Fail")
 
 
-
 #Creating order without payment methods
-import frappe
-
 @frappe.whitelist(allow_guest=True)
 def create_ebook_order(ebook_name):
     #Fetch prices of this book
