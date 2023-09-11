@@ -80,7 +80,6 @@ def push_mpesa_stk(request):
     response = requests.post(api_url, json=payload, headers=headers)
     if response.status_code == 200 and response.json().get('ResponseCode') == '0':
         
-
         print("Success")
     else:
         print("Fail")
